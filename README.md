@@ -14,6 +14,8 @@ Sample application which would include following features to make this app so-ca
 
 - **Search engine** enabled with Japanese.
 
+- **Scheduler** enabled for up-to-date search engine data.
+
 - **Log** management.
 
 - **Health** check.

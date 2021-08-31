@@ -1,5 +1,6 @@
 # Docker copy ignore patterns
 .git/
 node_modules/
+.memo.txt
 package-lock.json
 settings.js.*

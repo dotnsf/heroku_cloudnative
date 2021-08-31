@@ -26,6 +26,12 @@ html, body{
 $(function(){
 });
 
+function appLogout(){
+  if( confirm( 'ログアウトしますか？' ) ){
+    location.href = '/auth0/logout';
+  }
+}
+
 function showItemModal( item ){
   /*
   $('#itemModalTitle').html( name );
@@ -43,7 +49,9 @@ function showItemModal( item ){
 
 <div class="container">
   <table class="table">
-
+    <tr>
+      <th>#</th><th>name</th><th>price</th><th>actions</th>
+    </tr>
 <% 
 if( items && items.length > 0 ){
   for( var i = 0; i < items.length; i ++ ){ 

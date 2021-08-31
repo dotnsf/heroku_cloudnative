@@ -157,6 +157,7 @@ app.get( '/', function( req, res ){
     var query = { text: sql, values: [] };
     pg_client.query( query, function( err, result ){
       if( err ){
+        console.log( err );
         res.render( 'index', { user: user, items: [], error: err } );
       }else{
         var items = [];
@@ -164,6 +165,7 @@ app.get( '/', function( req, res ){
           try{
             items = result.rows;
           }catch( e ){
+            console.log( e );
           }
         }
         res.render( 'index', { user: user, items: items } );
