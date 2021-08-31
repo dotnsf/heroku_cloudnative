@@ -22,15 +22,65 @@ html, body{
   color: #333;
 }
 </style>
-</head>
-<body>
-
-<div class="container">
-</div>
-
 <script>
 $(function(){
 });
+
+function showItemModal( item ){
+  /*
+  $('#itemModalTitle').html( name );
+  $('#itemModalBody-image').prop( 'src', image_url );
+  */
+  $('#itemModal').modal();
+}
 </script>
+</head>
+<body>
+
+<div class="container" style="text-align: right;">
+  <button class="btn btn-warning" onClick="appLogout();" title="logout"><%= user.name %></button>
+</div>
+
+<div class="container">
+  <table class="table">
+
+<% 
+if( items && items.length > 0 ){
+  for( var i = 0; i < items.length; i ++ ){ 
+%>
+    <tr id="item_tr_<%= items[i].id %>">
+      <td><img src="<%= items[i].image_url %>" width="100"/></td>
+      <td><%= items[i].name %></td>
+      <td><%= items[i].price %></td>
+      <td>
+        <button class="btn btn-success">detail</button>
+      </td>
+    </tr>
+<%
+  }
+}
+%>
+  </table>
+</div>
+
+<div class="modal fade" id="itemModal" tabindex="-1" role="dialog" aria-labelledby="itemModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="itemModalBody">
+        <h5 id="itemModalTitle" style="font-weight: bold;"></h5>
+      </div>
+
+      <div class="modal-footer" style="justify-content: center;">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>

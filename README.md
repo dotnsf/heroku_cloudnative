@@ -4,21 +4,21 @@
 
 Sample application which would include following features to make this app so-called **Cloud Native** like with **Heroku**.
 
-- Environment values driven.
+- **Environment values driven** as cloud native application.
 
-- Multi-instance enabled.
+- **Multi-instance** enabled from zero.
 
-- Session enabled Login/Logout.
+- **Session enabled** Login/Logout.
 
-- Reconnectable DB.
+- **Reconnectable** DB/session memory.
 
-- Search engine enabled with Japanese.
+- **Search engine** enabled with Japanese.
 
-- Log management.
+- **Log** management.
 
-- Health check.
+- **Health** check.
 
-- Containerizale.
+- **Containerizable** if needed.
 
 
 ## Environment values
