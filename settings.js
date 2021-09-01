@@ -1,3 +1,5 @@
+exports.bonsai_url = '';
+
 exports.database_url = '';
 
 exports.auth0_callback_url = 'http://localhost:8080/auth0/callback';

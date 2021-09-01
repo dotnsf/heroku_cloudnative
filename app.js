@@ -10,17 +10,24 @@ var express = require( 'express' ),
 
 var settings = require( './settings' );
 
+//. env values
+var settings_auth0_callback_url = 'AUTH0_CALLBACK_URL' in process.env ? process.env.AUTH0_CALLBACK_URL : settings.auth0_callback_url; 
+var settings_auth0_client_id = 'AUTH0_CLIENT_ID' in process.env ? process.env.AUTH0_CLIENT_ID : settings.auth0_client_id; 
+var settings_auth0_client_secret = 'AUTH0_CLIENT_SECRET' in process.env ? process.env.AUTH0_CLIENT_SECRET : settings.auth0_client_secret; 
+var settings_auth0_domain = 'AUTH0_DOMAIN' in process.env ? process.env.AUTH0_DOMAIN : settings.auth0_domain; 
+var settings_bonsai_url = 'BONSAI_URL' in process.env ? process.env.BONSAI_URL : settings.bonsai_url; 
+var settings_database_url = 'DATABASE_URL' in process.env ? process.env.DATABASE_URL : settings.database_url; 
+var settings_redis_url = 'REDIS_URL' in process.env ? process.env.REDIS_URL : settings.redis_url; 
 
 process.env.PGSSLMODE = 'no-verify';
 
 var PG = require( 'pg' );
 PG.defaults.ssl = true;
-var database_url = 'DATABASE_URL' in process.env ? process.env.DATABASE_URL : settings.database_url; 
 var pg_client = null;
-if( database_url ){
-  console.log( 'database_url = ' + database_url );
+if( settings_database_url ){
+  console.log( 'database_url = ' + settings_database_url );
   var pg = new PG.Pool({
-    connectionString: database_url,
+    connectionString: settings_database_url,
     idleTimeoutMillis: ( 3 * 86400 * 1000 )
   });
   pg.connect( function( err, client ){
@@ -51,13 +58,6 @@ app.use( express.static( __dirname + '/public' ) );
 
 app.set( 'views', __dirname + '/views' );
 app.set( 'view engine', 'ejs' );
-
-//. env values
-var settings_auth0_callback_url = 'AUTH0_CALLBACK_URL' in process.env ? process.env.AUTH0_CALLBACK_URL : settings.auth0_callback_url; 
-var settings_auth0_client_id = 'AUTH0_CLIENT_ID' in process.env ? process.env.AUTH0_CLIENT_ID : settings.auth0_client_id; 
-var settings_auth0_client_secret = 'AUTH0_CLIENT_SECRET' in process.env ? process.env.AUTH0_CLIENT_SECRET : settings.auth0_client_secret; 
-var settings_auth0_domain = 'AUTH0_DOMAIN' in process.env ? process.env.AUTH0_DOMAIN : settings.auth0_domain; 
-var settings_redis_url = 'REDIS_URL' in process.env ? process.env.REDIS_URL : settings.redis_url; 
 
 //. Redis
 var redis = require( 'redis' );
