@@ -12,4 +12,3 @@ exports.redis_tls_url = '';
 
 exports.admin_username = 'username';
 exports.admin_password = 'password';
-
