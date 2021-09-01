@@ -33,11 +33,34 @@ Sample application which would include following features to make this app so-ca
 
 - AUTH0_DOMAIN : Domain name for Auth0 authentication
 
+- BONSAI_URL : URL for Bonsai Elasticsearch server
+
 - DATABASE_URL : URL connection string for PostgreSQL
 
 - PGSSLMODE : 'no-verify'
 
 - REDIS_URL : URL connection string for Redis
+
+
+## Files
+
+- app.js : web application which implements following features:
+
+  - Authentication / Online sign-up
+
+  - Multi-instance from zero
+
+  - Search engine / search data auto update by scheduler
+
+  - Reconnectable RDB
+
+  - Log / Health check
+
+- update_bonsai.js : CLI application which supposed to be called by scheduler and update search engine data
+
+- items.ddl : DDL for items table
+
+- items_index.json : Index definition for search engine
 
 
 ## Licensing
