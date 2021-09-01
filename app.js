@@ -1,5 +1,6 @@
 //. app.js
 var express = require( 'express' ),
+    axios = require( 'axios' ),
     basicAuth = require( 'basic-auth-connect' ),
     bodyParser = require( 'body-parser' ),
     fs = require( 'fs' ),
@@ -20,6 +21,12 @@ var settings_database_url = 'DATABASE_URL' in process.env ? process.env.DATABASE
 var settings_redis_url = 'REDIS_URL' in process.env ? process.env.REDIS_URL : settings.redis_url; 
 
 process.env.PGSSLMODE = 'no-verify';
+
+//. Bonsai Elasticsearch
+var bonsai = axios.create({
+  baseURL: settings_bonsai_url,
+  responseType: 'json'
+});
 
 var PG = require( 'pg' );
 PG.defaults.ssl = true;
@@ -168,9 +175,55 @@ app.get( '/', function( req, res ){
             console.log( e );
           }
         }
-        res.render( 'index', { user: user, items: items } );
+        res.render( 'index', { user: user, items: items, search_text: '' } );
       }
     });
+  }
+});
+
+app.post( '/', function( req, res ){
+  if( !req.user ){ 
+    res.redirect( '/auth0/login' );
+  }else{
+    var user = { id: req.user.id, name: req.user.nickname, email: req.user.displayName, image_url: req.user.picture };
+    var search_text = req.body.search_text;
+    bonsai.get( '/items/_search', { query: { match_phrase: { name: search_text } } }, { 'Content-Type': 'application/json' } ).then( async function( response ){
+      //console.log( response.data.hits.hits );
+      var items = [];
+      if( response.data && response.data.hits && response.data.hits.hits && response.data.hits.hits.length > 0 ){
+        for( var i = 0; i < response.data.hits.hits.length; i ++ ){
+          var r = response.data.hits.hits[i];
+          if( r && r._source ){
+            items.push( r._source );
+          }
+        }
+      }
+      console.log( items.length, items );
+      res.render( 'index', { user: user, items: items, search_text: search_text } );
+    }).catch( async function( err ){
+      res.render( 'index', { user: user, items: [], search_text: search_text } );
+    });
+
+    /*
+    var sql = "select * from items";
+    var query = { text: sql, values: [] };
+    pg_client.query( query, function( err, result ){
+      if( err ){
+        console.log( err );
+        res.render( 'index', { user: user, items: [], error: err } );
+      }else{
+        var items = [];
+        if( result.rows.length > 0 ){
+          try{
+            items = result.rows;
+          }catch( e ){
+            console.log( e );
+          }
+        }
+        res.render( 'index', { user: user, items: items, search_text: search_text } );
+      }
+    });
+    */
   }
 });
 

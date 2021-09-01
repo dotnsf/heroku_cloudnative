@@ -40,8 +40,25 @@ function showItemModal( item ){
   $('#itemModal').modal();
 }
 </script>
+<style type="text/css">
+.maintitle{
+  position: fixed;
+  z-index: 50;
+  font-size: 20px;
+  color: blue;
+  font-weight: bold;
+  height: 50px;
+  width: 100%;
+}
+</style>
 </head>
 <body>
+
+<div id="maintitle" class="_container">
+<form id="search_form" method="post" action="/">
+<input type="text" class="form-control" id="search_text" name="search_text" value="<%= search_text %>"/>
+</form>
+</div>
 
 <div class="container" style="text-align: right;">
   <button class="btn btn-warning" onClick="appLogout();" title="logout"><%= user.name %></button>
