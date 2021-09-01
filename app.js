@@ -187,7 +187,7 @@ app.post( '/', function( req, res ){
   }else{
     var user = { id: req.user.id, name: req.user.nickname, email: req.user.displayName, image_url: req.user.picture };
     var search_text = req.body.search_text;
-    bonsai.get( '/items/_search', { query: { match_phrase: { name: search_text } } }, { 'Content-Type': 'application/json' } ).then( async function( response ){
+    bonsai.get( '/items/_search?size=100', { query: { term: { name: search_text } }, _source: [ "name" ] }, { 'Content-Type': 'application/json' } ).then( async function( response ){
       //console.log( response.data.hits.hits );
       var items = [];
       if( response.data && response.data.hits && response.data.hits.hits && response.data.hits.hits.length > 0 ){
