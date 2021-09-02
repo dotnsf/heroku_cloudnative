@@ -59,7 +59,7 @@ if( settings_database_url ){
       if( err ){
         console.log( err );
       }else{
-      console.log( 'postgresql reconnected' );
+        console.log( 'postgresql reconnected' );
         pg_client = client;
       }
     });
@@ -204,7 +204,7 @@ app.post( '/', function( req, res ){
             name: search_text
           }
         },
-        size: 20
+        size: 200
       }
     }).then( function( response ){
       var items = [];
