@@ -1,46 +1,12 @@
-{ 
-  "settings": { 
-    "analysis": { 
-      "char_filter": { 
-        "normalize": { 
-          "type": "icu_normalizer",
-          "name": "nfkc",
-          "mode": "compose" 
-        } 
-      },
-      "tokenizer": { 
-        "kuromoji_normal": { 
-          "mode": "normal",
-          "type": "kuromoji_tokenizer" 
-        } 
-      },
-      "filter": { 
-        "edge_ngram": { 
-          "type": "edge_ngram",
-          "min_gram":1,
-          "max_gram":10 
-        },
-        "synonym": { 
-          "type": "synonym",
-          "lenient": true,
-          "synonyms": [ 
-            "nippon, nihon" 
-          ] 
-        } 
-      },
-      "analyzer": { 
-        "suggest_index_analyzer": { 
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "my_kuromoji_analyzer": {
           "type": "custom",
-          "char_filter": [ 
-            "normalize" 
-          ],
-          "tokenizer": "kuromoji_normal",
-          "filter": [ 
-            "lowercase",
-            "edge_ngram" 
-          ] 
-        } 
-      } 
-    } 
-  } 
+          "tokenizer": "kuromoji_tokenizer"
+        }
+      }
+    }
+  }
 }

@@ -187,10 +187,10 @@ app.post( '/', function( req, res ){
   }else{
     var user = { id: req.user.id, name: req.user.nickname, email: req.user.displayName, image_url: req.user.picture };
     var search_text = req.body.search_text;
-    bonsai.get( '/items/_search?size=100', { query: { term: { name: search_text } }, _source: [ "name" ] }, { 'Content-Type': 'application/json' } ).then( async function( response ){
-      //console.log( response.data.hits.hits );
+    bonsai.get( '/items/_search?size=20', { "query": { "match_phrase": { "name": search_text } } }, { "Content-Type": "application/json" } ).then( async function( response ){
       var items = [];
       if( response.data && response.data.hits && response.data.hits.hits && response.data.hits.hits.length > 0 ){
+        console.log( response.data.hits.hits );  //. _score が 1 のものばかり？？
         for( var i = 0; i < response.data.hits.hits.length; i ++ ){
           var r = response.data.hits.hits[i];
           if( r && r._source ){
@@ -198,7 +198,7 @@ app.post( '/', function( req, res ){
           }
         }
       }
-      console.log( items.length, items );
+      //console.log( items.length, items );
       res.render( 'index', { user: user, items: items, search_text: search_text } );
     }).catch( async function( err ){
       res.render( 'index', { user: user, items: [], search_text: search_text } );

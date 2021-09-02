@@ -19,8 +19,9 @@ var bonsai = axios.create({
 
 
 //. インデックスは作成済み（とみなす）
-//. インデックス削除 : $ curl -XDELETE https://username:password@xxxxxxxx.us-east-1.bonsaisearch.net:443/items?pretty
+//. インデックス削除 : $ curl -XDELETE https://username:password@xxxxxxxx.us-east-1.bonsaisearch.net:443/items
 //. インデックス作成 : $ curl -XPUT https://username:password@xxxxxxxx.us-east-1.bonsaisearch.net:443/items -d @items_index.json -H 'Content-Type: application/json'
+//. インデックス確認 : $ curl -XGET https://username:password@xxxxxxxx.us-east-1.bonsaisearch.net:443/items
 
 //. データ挿入後の動作確認例 : $ curl -XGET https://username:password@xxxxxxxx.us-east-1.bonsaisearch.net:443/items/_search -d '{"query":{"match_phrase":{"name":"ニールズヤード"}}}' -H 'Content-Type: application/json'
 
