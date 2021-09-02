@@ -60,8 +60,6 @@ Sample application which would include following features to make this app so-ca
 
 - items.ddl : DDL for items table
 
-- items_index.json : Index definition for search engine
-
 
 ## Licensing
 
