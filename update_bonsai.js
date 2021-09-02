@@ -26,16 +26,25 @@ var bonsai = axios.create({
 //. データ挿入後の動作確認例 : $ curl -XGET https://username:password@xxxxxxxx.us-east-1.bonsaisearch.net:443/items/_search -d '{"query":{"match_phrase":{"name":"ニールズヤード"}}}' -H 'Content-Type: application/json'
 
 
-//. 現在のデータを削除
-//. https://www.elastic.co/guide/en/elasticsearch/reference/5.4/docs-delete-by-query.html
-bonsai.post( '/items/_delete_by_query?conflicts=proceed', { query: { match_all: {} } }, { 'Content-Type': 'application/json' } ).then( async function( response ){
-  console.log( { response } );
-  await insertNewData();
-  process.exit( 0 );
-}).catch( async function( err ){
-  console.log( { err } );
-  await insertNewData();
-  process.exit( 0 );
+//. 現在のインデックスを削除
+bonsai.delete( '/items', {}, { 'Content-Type': 'application/json' } ).then( async function( response0 ){
+  //console.log( { response0 } );
+  //. インデックスを作成
+  bonsai.put( '/items', { settings: { analysis: { analyzer: { my_kuromoji_analyzer: { type: "custom", tokenizer: "kuromoji_tokenizer" } } } } }, { 'Content-Type': 'application/json' } ).then( async function( response1 ){
+    await insertNewData();
+    process.exit( 0 );
+  }).catch( async function( err1 ){
+    process.exit( 1 );
+  });
+}).catch( async function( err0 ){
+  //console.log( { err0 } );
+  //. インデックスを作成
+  bonsai.put( '/items', { settings: { analysis: { analyzer: { my_kuromoji_analyzer: { type: "custom", tokenizer: "kuromoji_tokenizer" } } } } }, { 'Content-Type': 'application/json' } ).then( async function( response1 ){
+    await insertNewData();
+    process.exit( 0 );
+  }).catch( async function( err1 ){
+    process.exit( 1 );
+  });
 });
 
 //. 最新データを取得して挿入

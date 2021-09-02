@@ -1,6 +1,6 @@
 //. app.js
 var express = require( 'express' ),
-    axios = require( 'axios' ),
+    elasticsearch = require( 'elasticsearch' ),
     basicAuth = require( 'basic-auth-connect' ),
     bodyParser = require( 'body-parser' ),
     fs = require( 'fs' ),
@@ -23,10 +23,18 @@ var settings_redis_url = 'REDIS_URL' in process.env ? process.env.REDIS_URL : se
 process.env.PGSSLMODE = 'no-verify';
 
 //. Bonsai Elasticsearch
-var bonsai = axios.create({
-  baseURL: settings_bonsai_url,
-  responseType: 'json'
-});
+var bonsai = null;
+if( settings_bonsai_url ){
+  console.log( 'bonsai_url = ' + settings_bonsai_url );
+
+  bonsai = new elasticsearch.Client({
+    host: settings_bonsai_url,
+    log: 'trace'
+  });
+
+  //. reconnect on error ?
+  //. インデックスを消しても接続は続く？
+}
 
 var PG = require( 'pg' );
 PG.defaults.ssl = true;
@@ -187,43 +195,32 @@ app.post( '/', function( req, res ){
   }else{
     var user = { id: req.user.id, name: req.user.nickname, email: req.user.displayName, image_url: req.user.picture };
     var search_text = req.body.search_text;
-    bonsai.get( '/items/_search?size=20', { "query": { "match_phrase": { "name": search_text } } }, { "Content-Type": "application/json" } ).then( async function( response ){
+
+    bonsai.search({
+      index: 'items',
+      body: {
+        query: {
+          match_phrase: {
+            name: search_text
+          }
+        },
+        size: 20
+      }
+    }).then( function( response ){
       var items = [];
-      if( response.data && response.data.hits && response.data.hits.hits && response.data.hits.hits.length > 0 ){
-        console.log( response.data.hits.hits );  //. _score が 1 のものばかり？？
-        for( var i = 0; i < response.data.hits.hits.length; i ++ ){
-          var r = response.data.hits.hits[i];
+      if( response && response.hits && response.hits.hits && response.hits.hits.length > 0 ){
+        for( var i = 0; i < response.hits.hits.length; i ++ ){
+          var r = response.hits.hits[i];
           if( r && r._source ){
             items.push( r._source );
           }
         }
       }
-      //console.log( items.length, items );
       res.render( 'index', { user: user, items: items, search_text: search_text } );
-    }).catch( async function( err ){
+    }).catch( function( err ){
+      console.log( err );
       res.render( 'index', { user: user, items: [], search_text: search_text } );
     });
-
-    /*
-    var sql = "select * from items";
-    var query = { text: sql, values: [] };
-    pg_client.query( query, function( err, result ){
-      if( err ){
-        console.log( err );
-        res.render( 'index', { user: user, items: [], error: err } );
-      }else{
-        var items = [];
-        if( result.rows.length > 0 ){
-          try{
-            items = result.rows;
-          }catch( e ){
-            console.log( e );
-          }
-        }
-        res.render( 'index', { user: user, items: items, search_text: search_text } );
-      }
-    });
-    */
   }
 });
 
